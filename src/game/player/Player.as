@@ -13,10 +13,10 @@ package game.player
 		private var map:MainMap;
 		private var index:int = -1;
 		
-		public function Player(map:MainMap) 
+		public function Player(map:MainMap, name:String) 
 		{
 			super();
-			this.map = map;		
+			this.map = map;
 		}
 		
 	}

@@ -1,5 +1,7 @@
 package game 
 {
+	import com.adobe.serialization.json.JSON;
+	import flash.events.ProgressEvent;
 	import flash.net.Socket;
 	/**
 	 * ...
@@ -14,7 +16,16 @@ package game
 			this.s = s;
 			this.manager = manager;
 			
+			s.addEventListener(ProgressEvent.SOCKET_DATA, dataListener);
 		}
+		
+		private function dataListener(e:ProgressEvent):void 
+		{
+			var bundle:Object = JSON.decode(s.readUTF());
+			manager.handleBundle(bundle);
+		}
+		
+		
 		
 	}
 

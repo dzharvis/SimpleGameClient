@@ -41,11 +41,36 @@ package game
 		
 		public function handleBundle(bundle:Object):void 
 		{
+			
 			switch(bundle.header){
-			case "info": 
+			case "info": {
 				var i:int = bundle.values[0];
-				gamer = new Player(map, "shit");
+				gamer = new Player(map, i);
 				pushPlayer(i, gamer);
+				
+				var b:Bundle = new Bundle("request gamers");
+				socketListener.sendBundle(b);
+				
+				break;
+			}
+			case "moving1": {
+				var i:int = bundle.values[0];
+				var direction:String = bundle.values[1];
+				movePlayer(direction, i);
+				break;
+			}
+			case "moving0": {
+				var i:int = bundle.values[0];
+				var direction:String = bundle.values[1];
+				var _x:int = bundle.values[2];
+				var _y:int = bundle.values[3];
+				stopMovePlayer(direction, i, _x, _y);
+				break;
+			}
+			case "connected": {
+				var i:int = bundle.values[0];
+				pushPlayer(i, new Player(map, i));
+			}
 			}
 		}
 		
@@ -67,6 +92,39 @@ package game
 				trace("Error, while deleting a player, appears!");
 			}
 			players[index] = null;
+		}
+		
+		public function movePlayer(direction:String, playerId:int=-1):void 
+		{
+			if (playerId == -1) {
+				gamer.addDirection(direction);
+				var b:Bundle = new Bundle("moving1");
+				b.pushValue(gamer.index);
+				b.pushValue(direction);
+				socketListener.sendBundle(b);
+			} else {
+				if(players[playerId]!=null) players[playerId].addDirection(direction);
+			}
+		}
+		
+		public function stopMovePlayer(direction:String, playerId:int=-1, _x:int=0, _y:int=0):void 
+		{
+			if (playerId == -1) {
+				gamer.removeDirection(direction);
+				var b:Bundle = new Bundle("moving0");
+				b.pushValue(gamer.index);
+				b.pushValue(direction);
+				b.pushValue(gamer.x);
+				b.pushValue(gamer.y);
+				socketListener.sendBundle(b);
+			} else {
+				if (players[playerId] != null) {
+					players[playerId].removeDirection(direction);
+					players[playerId].x = _x;
+					players[playerId].y = _y;
+					
+				}
+			}
 		}
 		
 		

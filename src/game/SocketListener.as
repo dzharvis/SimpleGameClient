@@ -21,8 +21,18 @@ package game
 		
 		private function dataListener(e:ProgressEvent):void 
 		{
-			var bundle:Object = JSON.decode(s.readUTF());
-			manager.handleBundle(bundle);
+			while (s.bytesAvailable > 0) {
+				var bundle:Object = JSON.decode(s.readUTF());
+				manager.handleBundle(bundle);
+			}
+			
+		}
+		
+		public function sendBundle(b:Bundle):void {
+			var str:String = JSON.encode(b);
+			trace(str);
+			s.writeUTF(str);
+			s.flush();
 		}
 		
 		

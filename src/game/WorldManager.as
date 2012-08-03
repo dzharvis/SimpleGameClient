@@ -3,6 +3,7 @@ package game
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
+	import flash.geom.Point;
 	import flash.net.Socket;
 	import game.player.Player;
 	import game.ui.Chat;
@@ -14,7 +15,7 @@ package game
 	 */
 	public class WorldManager extends Sprite 
 	{
-		private var map:MainMap = new MainMap();
+		private var map:MainMap;
 		private var players:Array = new Array(20);
 		private var gamer:Player;
 		private var s:Socket;
@@ -31,6 +32,7 @@ package game
 			this.s = s;
 			this.nickname = nickname;
 			
+			
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
@@ -40,10 +42,21 @@ package game
 			chatWindow = new Chat(this);
 			keyListener = new KeyListener(stage, this);
 			socketListener = new SocketListener(s, this);
-			
+			map = new MainMap(this);
 			addChild(map);
 			addChild(chatWindow);
-			chatWindow.y = stage.stageHeight - chatWindow.height;
+			
+		}
+		
+		public function requestResize():void {
+			if (width / height > stage.stageWidth / stage.stageHeight) {
+				scaleX = scaleY = stage.stageWidth / width;
+			} else {
+				scaleX = scaleY = stage.stageHeight/height;
+			}
+			
+			chatWindow.setSize(new Point(width, height));
+			chatWindow.y = map.height - chatWindow.height;
 		}
 		
 		public function handleBundle(bundle:Object):void 
@@ -62,11 +75,6 @@ package game
 				
 				var b:Bundle = new Bundle("request gamers");
 				socketListener.sendBundle(b);
-				
-				
-				
-				
-				
 				break;
 			}
 			case "moving1": {

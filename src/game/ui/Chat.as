@@ -3,6 +3,7 @@ package game.ui
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.text.TextField;
 	import game.Bundle;
 	import game.WorldManager;
@@ -38,10 +39,9 @@ package game.ui
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, sendMessage);
 			
 			messageInput.backgroundColor = 0x666666;
-			messagesOutput.width = messageInput.width = stage.stageWidth*.3;
+			
 			messagesOutput.border = messageInput.border = true;
-			messagesOutput.height = stage.stageHeight * .2 * .8;
-			messageInput.height =  stage.stageHeight*.2*.2;
+			
 			messageInput.type = "input";
 			messageInput.y = messagesOutput.height;
 			
@@ -52,6 +52,14 @@ package game.ui
 		public function putMessage(message:String):void {
 			messagesOutput.text += message + "\n";
 			messagesOutput.scrollV++;
+		}
+		
+		public function setSize(size:Point):void {
+			
+			messagesOutput.width = messageInput.width = size.x*.2;
+			
+			messagesOutput.height = size.y * .1 * .8;
+			messageInput.height =  size.y*.1*.2;
 		}
 		
 		private function sendMessage(e:KeyboardEvent):void {

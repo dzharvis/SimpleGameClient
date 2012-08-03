@@ -1,7 +1,9 @@
 package game.player 
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import game.world.MainMap;
@@ -37,7 +39,10 @@ package game.player
 			this.map = map;
 			this.index = index;
 			
+			scaleX = scaleY = .5;
+			
 			addEventListener(Event.ADDED_TO_STAGE, init);
+			
 			
 		}
 		
@@ -64,10 +69,7 @@ package game.player
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			addChild(tank);
-			//tank.scaleX = tank.scaleY = (100 * map.scaleX) / tank.width;
-			
-			//tank.x -= tank.width / 2;
-			//tank.y -= tank.height / 2;
+			x = y = 50;
 		}
 		
 		public function setSpeed(s:int):void {
@@ -119,6 +121,14 @@ package game.player
 			if (up == false && right == false && down == false && left == false) removeEventListener(Event.ENTER_FRAME, moveAnim);
 		}
 		
+		private function getNearestBlockIndexes():Point {
+			var globPoint:Point = localToGlobal(new Point(0, 0));
+					var mapPoint:Point = map.globalToLocal(globPoint);
+					var blockIndexY:int = Math.floor(mapPoint.y / map.getGridStep());
+					var blockIndexX:int = Math.floor(mapPoint.x / map.getGridStep());
+					return new Point(blockIndexX, blockIndexY);
+		}
+		
 		private function moveAnim(e:Event):void 
 		{
 			if (up) {
@@ -127,7 +137,12 @@ package game.player
 				} else if (tank.rotation <= 90 && tank.rotation > -90) {
 					tank.rotation -= rotationSpeed;
 				} else {
-					y -= speed;
+					
+					var indexes:Point = getNearestBlockIndexes();
+					if (!map.testHit(tank, indexes.x, indexes.y-1) && !map.testHit(tank, indexes.x+1, indexes.y-1)) {
+						y -= speed;
+					}
+					
 				}
 				return;
 			}
@@ -137,7 +152,10 @@ package game.player
 				} else if (tank.rotation < 0) {
 					tank.rotation += rotationSpeed;
 				} else {
-					x += speed;
+					var indexes:Point = getNearestBlockIndexes();
+					if (!map.testHit(tank, indexes.x+1, indexes.y) && !map.testHit(tank, indexes.x+1, indexes.y+1)) {
+						x += speed;
+					}
 				}
 				return;
 				
@@ -148,7 +166,10 @@ package game.player
 				} else if (tank.rotation > 92) {
 					tank.rotation -= rotationSpeed;
 				} else {
-					y += speed;
+					var indexes:Point = getNearestBlockIndexes();
+					if (!map.testHit(tank, indexes.x, indexes.y+1) && !map.testHit(tank, indexes.x+1, indexes.y+1)) {
+						y += speed;
+					}
 				}
 				return;
 			}
@@ -158,7 +179,10 @@ package game.player
 				} else if (tank.rotation <= 0 && tank.rotation > -180) {
 					tank.rotation -= rotationSpeed;
 				} else {
-					x -= speed;
+					var indexes:Point = getNearestBlockIndexes();
+					if (!map.testHit(tank, indexes.x-1, indexes.y) && !map.testHit(tank, indexes.x-1, indexes.y+1)) {
+						x -= speed;
+					}
 				}
 				return;
 			}

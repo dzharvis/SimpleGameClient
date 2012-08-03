@@ -17,6 +17,9 @@ package game.player
 		{
 			super();
 			addChild(tank);
+			tank.x -= tank.width / 2;
+			tank.y -= tank.height / 2;
+			
 		}
 		
 	}

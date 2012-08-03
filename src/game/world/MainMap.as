@@ -1,5 +1,6 @@
 package game.world 
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.net.URLLoader;
@@ -14,6 +15,13 @@ package game.world
 	{
 		
 		private var tileMatrix:Array = new Array();
+		
+		[Embed(source = "earth.jpg")]
+		private var Earth:Class;
+		//private var earth:Bitmap = new Earth();
+		[Embed(source = "stone.jpg")]
+		private var Stone:Class;
+		//private var stone:Bitmap = new Stone();
 		
 		public function MainMap() 
 		{
@@ -38,9 +46,15 @@ package game.world
 				for (var w:int = 0; w < arrayOfObjects.length; w++) {
 					tileMatrix[w] = new Array();
 					if(arrayOfObjects[w] == "1"){
-						var tile:BlackTile = new BlackTile();
-						tile.x = w * 100;
-						tile.y = h * 100;
+						var tile:Bitmap = new Stone();
+						tile.x = w * tile.width;
+						tile.y = h * tile.height;
+						addChild(tile);
+						tileMatrix[w][h] = tile;
+					} else if (arrayOfObjects[w] == "0") {
+						var tile:Bitmap = new Earth();
+						tile.x = w * tile.width;
+						tile.y = h * tile.height;
 						addChild(tile);
 						tileMatrix[w][h] = tile;
 					}

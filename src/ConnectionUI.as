@@ -13,6 +13,7 @@ package
 	public class ConnectionUI extends Sprite 
 	{
 		private var main:Main;
+		private var nickNameTextField:TextField;
 		
 		public function ConnectionUI(main:Main) 
 		{
@@ -27,7 +28,7 @@ package
 			graphics.beginFill(0x333333);
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			var text:TextField = new TextField();
-			text.text = "Press connect in order to connect (isn't it obvious?)";
+			text.text = "Select your nickname and press connect in order to connect (isn't it obvious?)";
 			text.textColor = 0x0099cc;
 			text.autoSize = TextFieldAutoSize.CENTER;
 			text.scaleX = text.scaleY = 1.5;
@@ -46,11 +47,27 @@ package
 			connectButton.addChild(connectText);
 			connectButton.x = stage.stageWidth / 2 - connectButton.width / 2;
 			connectButton.y = stage.stageHeight / 2 - connectButton.height / 2;
+			
+			nickNameTextField = new TextField();
+			addChild(nickNameTextField);
+			//nickNameTextField.autoSize = TextFieldAutoSize.LEFT;
+			nickNameTextField.text = "Nickname here";
+			nickNameTextField.type = "input";
+			nickNameTextField.background = 0xffffff;
+			nickNameTextField.x = connectButton.x;
+			nickNameTextField.y = connectButton.y + nickNameTextField.height + 10;
+			nickNameTextField.width = 170;
+			nickNameTextField.height = 25;
+			
 		}
 		
 		private function connectListener(e:MouseEvent):void 
 		{
-			main.connect();
+			if (nickNameTextField.text == "Nickname here" || nickNameTextField.text == "" || nickNameTextField.text == "Please select nickname") {
+				nickNameTextField.text = "Please select nickname";
+				return;
+			}
+			main.connect(nickNameTextField.text);
 		}
 		
 	}

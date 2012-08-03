@@ -18,6 +18,7 @@ package
 	public class Main extends Sprite 
 	{
 		private var s:Socket;
+		private var nickname:String;
 		public function Main():void 
 		{
 			if (stage) init();
@@ -33,7 +34,8 @@ package
 			
 		}
 		
-		public function connect():void {
+		public function connect(text:String):void {
+			nickname = text;
 			s = new Socket("109.86.9.142", 35707);			
 			s.addEventListener(Event.CONNECT, connListener);
 		}
@@ -49,7 +51,7 @@ package
 			while (numChildren > 0) {
 				removeChild(getChildAt(0));
 			}
-			addChild(new WorldManager(s));
+			addChild(new WorldManager(s, nickname));
 		}
 		
 	}

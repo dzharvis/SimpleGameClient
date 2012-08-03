@@ -30,7 +30,6 @@ package game
 		
 		public function sendBundle(b:Bundle):void {
 			var str:String = JSON.encode(b);
-			trace(str);
 			s.writeUTF(str);
 			s.flush();
 		}

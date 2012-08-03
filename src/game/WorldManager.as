@@ -5,6 +5,7 @@ package game
 	import flash.events.ProgressEvent;
 	import flash.net.Socket;
 	import game.player.Player;
+	import game.ui.Chat;
 	import game.world.MainMap;
 	
 	/**
@@ -18,25 +19,31 @@ package game
 		private var gamer:Player;
 		private var s:Socket;
 		
+		private var chatWindow:Chat;
+		
 		private var keyListener:KeyListener;
 		private var socketListener:SocketListener;
+		private var nickname:String;
 		
-		public function WorldManager(s:Socket) 
+		public function WorldManager(s:Socket, nickname:String) 
 		{
 			super();
-			this.s = s;		
+			this.s = s;
+			this.nickname = nickname;
+			
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
 		private function init(e:Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
+			chatWindow = new Chat(this);
 			keyListener = new KeyListener(stage, this);
 			socketListener = new SocketListener(s, this);
 			
 			addChild(map);
-			
+			addChild(chatWindow);
+			chatWindow.y = stage.stageHeight - chatWindow.height;
 		}
 		
 		public function handleBundle(bundle:Object):void 
@@ -46,10 +53,19 @@ package game
 			case "info": {
 				var i:int = bundle.values[0];
 				gamer = new Player(map, i);
+				gamer.setName(nickname);
 				pushPlayer(i, gamer);
+				
+				b = new Bundle("name");
+				b.pushValue(nickname);
+				socketListener.sendBundle(b);
 				
 				var b:Bundle = new Bundle("request gamers");
 				socketListener.sendBundle(b);
+				
+				
+				
+				
 				
 				break;
 			}
@@ -69,9 +85,20 @@ package game
 			}
 			case "connected": {
 				var i:int = bundle.values[0];
-				pushPlayer(i, new Player(map, i));
+				var p:Player = new Player(map, i);
+				p.setName(bundle.values[1]);
+				pushPlayer(i, p);
+				break;
+			}
+			case "message": {
+				chatWindow.putMessage(bundle.values[0]);
+				break;
 			}
 			}
+		}
+		
+		public function sendBundle(b:Bundle):void {
+			socketListener.sendBundle(b);
 		}
 		
 		public function pushPlayer(index:int, pl:Player):void {
@@ -81,7 +108,7 @@ package game
 			} else {
 				players[index] = pl;
 				///////
-				addChild(pl);
+				addChildAt(pl, 1);
 			}
 		}
 		

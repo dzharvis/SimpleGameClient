@@ -15,7 +15,7 @@ package game.player {
 	 * @author Dzharvis
 	 */
 	public class Player extends Sprite {
-		private var tank:Tank = new Tank();
+		private var _tank:Tank = new Tank();
 		private var map:MainMap;
 		public var index:int = -2;
 		private var manager:WorldManager;
@@ -154,7 +154,7 @@ package game.player {
 		
 		public function updateCoords():void {
 			iniX = x;
-			iniY = y;	
+			iniY = y;
 		}
 		
 		public function get iniX():Number {
@@ -188,6 +188,10 @@ package game.player {
 			} else {
 				showHealth();
 			}
+		}
+		
+		public function get tank():Tank {
+			return _tank;
 		}
 		
 		private function getNearestBlockIndexes():Point {

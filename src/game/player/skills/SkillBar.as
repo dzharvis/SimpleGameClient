@@ -1,6 +1,7 @@
 package game.player.skills {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import game.Bundle;
 	import game.player.Player;
@@ -17,6 +18,7 @@ package game.player.skills {
 		private var manager:WorldManager;
 		private var timeStop:TimeStop;
 		private var rocket:SelfGuidedRocket;
+		private var mStage:Stage;
 
 		
 		
@@ -25,6 +27,7 @@ package game.player.skills {
 			timeStop = new TimeStop(manager);
 			rocket = new SelfGuidedRocket(manager);
 			this.manager = manager;
+			//this.mStage = stage;
 			addChild(timeStop);
 			addChild(rocket);
 			rocket.x = timeStop.width + 5;
@@ -32,7 +35,20 @@ package game.player.skills {
 			rocket.addEventListener(MouseEvent.CLICK, rocketListener);
 		}
 		
-		public function deploySkill(type:String):void {
+		public function deploySkill(b:Object):void {
+			var _who:Player = manager.getPlayer(b.values[0]);
+			var _target:Player = manager.getPlayer(b.values[1]);
+			var skillIndex:int = b.values[2];
+			
+			if (_who == manager.getPlayer()) {
+				if(rocket.skillAvailable()){
+					rocket.deploy(_who, _target, true, skillIndex);
+					rocket.beginCooldown();
+				}
+			} else {
+				rocket.deploy(_who, _target, false, -1);
+			}
+			
 			
 		}
 		
@@ -40,12 +56,13 @@ package game.player.skills {
 			if (manager.target == null) {
 				return;
 			} else {
-				var b:Bundle = new Bundle("rocket");
-				manager.sendBundle(b);
-				var p:Player = manager.getPlayer();
-			}	
-			
-		}	
+				if(rocket.distance >= Utils.calcDistance(manager.getPlayer(), manager.target)){
+					var b:Bundle = new Bundle("rocket permission");
+					manager.sendBundle(b);
+					var p:Player = manager.getPlayer();
+				}
+			}			
+		}		
 		
 		private function slowTimeListener(e:MouseEvent=null):void {
 			if (timeStop.skillAvailable()) {

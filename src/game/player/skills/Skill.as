@@ -29,7 +29,7 @@ package game.player.skills {
 			this.manager = manager;
 			_cooldown = 5000;
 			_distance = 200;
-			lastTimeUsed = -Infinity;
+			lastTimeUsed = new Date().getTime()-3600000;
 			shadow.graphics.beginFill(0x000000, .5);
 			shadow.graphics.drawRect(0, 0, width, height);
 			timeLeft.autoSize = TextFieldAutoSize.LEFT;
@@ -45,6 +45,7 @@ package game.player.skills {
 		private function outListener(e:MouseEvent):void {
 			manager.getPlayer().removeChild(circle);
 		}
+		
 		
 		private function overListener(e:MouseEvent):void {
 			manager.getPlayer().addChild(circle);

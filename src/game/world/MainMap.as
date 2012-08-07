@@ -18,12 +18,10 @@ package game.world {
 		
 		[Embed(source="pics/earth.jpg")]
 		private var Earth:Class;
-		//private var earth:Bitmap = new Earth();
 		[Embed(source="pics/stone.jpg")]
 		private var Stone:Class;
-		private var manager:WorldManager;
 		
-		//private var stone:Bitmap = new Stone();
+		private var manager:WorldManager;
 		
 		public function MainMap(manager:WorldManager) {
 			super();

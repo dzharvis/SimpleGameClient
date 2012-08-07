@@ -122,6 +122,21 @@ package game {
 					}					
 					break;
 				}
+				case "rocket launch": {
+					sb.deploySkill(bundle);
+					break;
+				}
+				case "health": {
+					players[bundle.values[0]].health = bundle.values[1];
+					break;
+				}
+				case "dead": {
+					players[bundle.values[0]].health = 100;
+					players[bundle.values[0]].stopMoving();
+					players[bundle.values[0]].iniY = 50;
+					players[bundle.values[0]].iniX = 50;
+					break;
+				}
 			}
 		}
 		
@@ -191,7 +206,6 @@ package game {
 					
 				}
 			}
-			trace(playerId);
 		}
 		
 		public function get target():Player {

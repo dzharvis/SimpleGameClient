@@ -1,5 +1,4 @@
-package game.ui 
-{
+package game.ui {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -12,54 +11,48 @@ package game.ui
 	 * ...
 	 * @author Dzharvis
 	 */
-	public class Chat extends Sprite 
-	{
+	public class Chat extends Sprite {
 		private var messagesOutput:TextField = new TextField();
 		private var messageInput:TextField = new TextField();
 		private var manager:WorldManager;
 		
-		public function Chat(manager:WorldManager) 
-		{
+		public function Chat(manager:WorldManager) {
 			super();
 			addEventListener(Event.ADDED_TO_STAGE, init);
 			this.manager = manager;
-			
-			
+		
 		}
 		
-		private function init(e:Event):void 
-		{
+		private function init(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			messagesOutput.alpha = messageInput.alpha = .9;
 			messagesOutput.background = messageInput.background = true;
-			messagesOutput.backgroundColor = 0xdddddd;
+			messagesOutput.backgroundColor = 0x333333;
+			messagesOutput.textColor = 0x0099cc;
 			messagesOutput.wordWrap = true;
-			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, sendMessage);
-			
-			messageInput.backgroundColor = 0x666666;
-			
 			messagesOutput.border = messageInput.border = true;
 			
+			messageInput.backgroundColor = 0x505050;
+			messageInput.textColor = 0xffffff;
 			messageInput.type = "input";
-			messageInput.y = messagesOutput.height;
 			
 			addChild(messageInput);
 			addChild(messagesOutput);
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, sendMessage);	
 		}
 		
 		public function putMessage(message:String):void {
-			messagesOutput.text += message + "\n";
-			messagesOutput.scrollV++;
+			messagesOutput.appendText(message + "\n");
+			messagesOutput.scrollV = messagesOutput.maxScrollV;
 		}
 		
-		public function setSize(size:Point):void {
-			
-			messagesOutput.width = messageInput.width = size.x*.2;
-			
-			messagesOutput.height = size.y * .1 * .8;
-			messageInput.height =  size.y*.1*.2;
+		public function setSize(size:Point):void {			
+			messagesOutput.width = messageInput.width = size.x * .3;			
+			messagesOutput.height = size.y * .2 * .8;
+			messageInput.height = size.y * .2 * .2;
+			messageInput.y = messagesOutput.height+5;
 		}
 		
 		private function sendMessage(e:KeyboardEvent):void {
@@ -69,9 +62,9 @@ package game.ui
 				
 				messageInput.text = "";
 				manager.sendBundle(b);
-			}			
+			}
 		}
-		
+	
 	}
 
 }

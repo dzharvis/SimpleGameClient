@@ -1,4 +1,4 @@
-package game.player 
+package game.player.graphics 
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -9,7 +9,7 @@ package game.player
 	 */
 	public class Tank extends Sprite 
 	{
-		[Embed(source = "tank.png")]
+		[Embed(source = "pics/tank.png")]
 		private var TankBitmap:Class;
 		
 		private var tank:Bitmap = new TankBitmap();

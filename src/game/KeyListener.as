@@ -1,14 +1,13 @@
-package game 
-{
+package game {
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import game.player.Player;
+	
 	/**
 	 * ...
 	 * @author Dzharvis
 	 */
-	public class KeyListener 
-	{
+	public class KeyListener {
 		private var manager:WorldManager;
 		
 		private var up:Boolean = false;
@@ -16,41 +15,39 @@ package game
 		private var right:Boolean = false;
 		private var down:Boolean = false;
 		
-		public function KeyListener(stage:Stage, manager:WorldManager) 
-		{
+		public function KeyListener(stage:Stage, manager:WorldManager) {
 			this.manager = manager;
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downEvent);
 			stage.addEventListener(KeyboardEvent.KEY_UP, upEvent);
-			
+		
 		}
 		
-		private function upEvent(e:KeyboardEvent):void 
-		{			
-			switch(e.keyCode) {
-				case 87: {					
+		private function upEvent(e:KeyboardEvent):void {
+			switch (e.keyCode) {
+				case 87:  {
 					if (up) {
-						manager.stopMovePlayer(Player.UP);
+						manager.stopMovePlayer();
 						up = false;
 					}
 					break;
 				}
-				case 83: {
+				case 83:  {
 					if (down) {
-						manager.stopMovePlayer(Player.DOWN);
+						manager.stopMovePlayer();
 						down = false;
 					}
 					break;
 				}
-				case 65: {
+				case 65:  {
 					if (left) {
-						manager.stopMovePlayer(Player.LEFT);
+						manager.stopMovePlayer();
 						left = false;
 					}
 					break;
 				}
-				case 68: {
+				case 68:  {
 					if (right) {
-						manager.stopMovePlayer(Player.RIGHT);
+						manager.stopMovePlayer();
 						right = false;
 					}
 					break;
@@ -58,40 +55,40 @@ package game
 			}
 		}
 		
-		private function downEvent(e:KeyboardEvent):void 
-		{
-			switch(e.keyCode) {
-				case 87: {					
+		private function downEvent(e:KeyboardEvent):void {
+			var s:Number = new Date().getTime();
+			switch (e.keyCode) {
+				case 87:  {
 					if (!up) {
-						manager.movePlayer(Player.UP);
+						manager.movePlayer(s, Player.UP);
 						up = true;
 					}
 					break;
 				}
-				case 83: {
+				case 83:  {
 					if (!down) {
-						manager.movePlayer(Player.DOWN);
+						manager.movePlayer(s, Player.DOWN);
 						down = true;
 					}
 					break;
 				}
-				case 65: {
+				case 65:  {
 					if (!left) {
-						manager.movePlayer(Player.LEFT);
+						manager.movePlayer(s, Player.LEFT);
 						left = true;
 					}
 					break;
 				}
-				case 68: {
+				case 68:  {
 					if (!right) {
-						manager.movePlayer(Player.RIGHT);
+						manager.movePlayer(s, Player.RIGHT);
 						right = true;
 					}
 					break;
 				}
 			}
 		}
-		
+	
 	}
 
 }

@@ -2,6 +2,7 @@ package game.ui {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.TextEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import game.Bundle;
@@ -40,7 +41,9 @@ package game.ui {
 			addChild(messageInput);
 			addChild(messagesOutput);
 			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, sendMessage);	
+			
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, sendMessage, false, 20);
 		}
 		
 		public function putMessage(message:String):void {
@@ -56,12 +59,22 @@ package game.ui {
 		}
 		
 		private function sendMessage(e:KeyboardEvent):void {
+			if (e.keyCode == 13) {
+				if (stage.focus == messageInput) {
+					stage.focus = stage;
+				} else {
+					stage.focus = messageInput;
+				}
+			}
 			if (e.keyCode == 13 && messageInput.text.length > 0) {
 				var b:Bundle = new Bundle("message");
 				b.pushValue(messageInput.getRawText());
 				
 				messageInput.text = "";
 				manager.sendBundle(b);
+			}
+			if (stage.focus == messageInput) {
+				e.stopImmediatePropagation();
 			}
 		}
 	

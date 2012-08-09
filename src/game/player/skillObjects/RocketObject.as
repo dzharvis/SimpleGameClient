@@ -11,6 +11,7 @@ package game.player.skillObjects {
 	 * @author Dzharvis
 	 */
 	public class RocketObject extends Sprite {
+		static public const SPEED:Number = .2;
 		private var who:Player;
 		private var target:Player;
 		private var event:Boolean;
@@ -47,8 +48,8 @@ package game.player.skillObjects {
 			var timeDiff:Number = new Date().getTime() - startTime;
 			startTime = new Date().getTime();
 			
-			x = iniX + (timeDiff * unitVec.x * .1);
-			y = iniY + (timeDiff * unitVec.y * .1);
+			x = iniX + (timeDiff * unitVec.x * SPEED);
+			y = iniY + (timeDiff * unitVec.y * SPEED);
 			
 			iniX = x;
 			iniY = y;
@@ -59,7 +60,7 @@ package game.player.skillObjects {
 				removeEventListener(Event.ENTER_FRAME, rocketFly);
 				manager.removeChild(this);
 				if (event) {
-					var b:Bundle = new Bundle("rocket hit");
+					var b:Bundle = new Bundle("rocket hit", "skill");
 					b.pushValue(skillIndex);
 					manager.sendBundle(b);
 				}

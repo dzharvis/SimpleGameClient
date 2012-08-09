@@ -1,9 +1,7 @@
 package game.player.skills {
 	import flash.display.Bitmap;
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	import flash.events.Event;
 	import game.player.Player;
 	import game.player.skillObjects.RocketObject;
 	import game.WorldManager;
@@ -37,8 +35,7 @@ package game.player.skills {
 		public function deploy(who:Player, target:Player, event:Boolean, skillIndex:int):void {
 			var r:RocketObject = new RocketObject(who, target, event, manager, skillIndex);
 			manager.addChild(r);
-			r.deploy();
-			
+			r.deploy();			
 		}
 		
 	}

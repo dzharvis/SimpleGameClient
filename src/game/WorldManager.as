@@ -30,11 +30,9 @@ package game {
 		public function WorldManager(s:Socket, nickname:String) {
 			super();
 			this.s = s;
-			this.nickname = nickname;			
+			this.nickname = nickname;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
-		
 		
 		private function init(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
@@ -43,7 +41,7 @@ package game {
 			socketListener = new SocketListener(s, this);
 			map = new MainMap(this);
 			sb = new SkillBar(this);
-			stage.addChild(sb);			
+			stage.addChild(sb);
 			stage.addChild(chatWindow);
 			chatWindow.setSize(new Point(stage.stageWidth, stage.stageHeight));
 			addChild(map);
@@ -51,90 +49,66 @@ package game {
 		
 		public function requestResize():void {
 			
-			if (width / height > stage.stageWidth / (stage.stageHeight-chatWindow.height-10)) {
+			if (width / height > stage.stageWidth / (stage.stageHeight - chatWindow.height - 10)) {
 				scaleX = scaleY = stage.stageWidth / width;
 			} else {
-				scaleX = scaleY = (stage.stageHeight-chatWindow.height-10) / height;
-			}			
+				scaleX = scaleY = (stage.stageHeight - chatWindow.height - 10) / height;
+			}
 			
-			chatWindow.y = sb.y = height+5;
-			sb.x = chatWindow.x + chatWindow.width+5;
+			chatWindow.y = sb.y = height + 5;
+			sb.x = chatWindow.x + chatWindow.width + 5;
 		}
 		
 		public function handleBundle(bundle:Object):void {
 			var i:int;
 			var direction:String;
-			switch (bundle.header) {
-				case "info":  {
-					i = bundle.values[0];
-					gamer = new Player(map, i, this);
-					gamer.setName(nickname);
-					pushPlayer(i, gamer);					
-					b = new Bundle("name");
-					b.pushValue(nickname);
-					socketListener.sendBundle(b);					
-					var b:Bundle = new Bundle("request gamers");
-					socketListener.sendBundle(b);
+			switch (bundle.type) {
+				case "skill":  {
+					sb.handleBundle(bundle);
 					break;
 				}
-				case "moving1":  {
-					i = bundle.values[0];
-					direction = bundle.values[1];
-					var start:Number = bundle.values[2];
-					movePlayer(start, direction, i);
+				case "player":  {
+					players[bundle.values[0]].handleBundle(bundle);					
 					break;
 				}
-				case "moving0":  {
-					i = bundle.values[0];
-					var _x:int = bundle.values[1];
-					var _y:int = bundle.values[2];
-					stopMovePlayer(_x, _y, i);
+				case "map":  {
+					
 					break;
 				}
-				case "connected":  {
-					i = bundle.values[0];
-					var p:Player = new Player(map, i, this);
-					p.setName(bundle.values[1]);
-					pushPlayer(i, p);
+				case "chat":  {
+					chatWindow.handleBundle(bundle);
 					break;
 				}
-				case "deleted":  {
-					deletePlayer(bundle.values[0]);
-					break;
-				}
-				case "message":  {
-					chatWindow.putMessage(bundle.values[0]);
-					break;
-				}
-				case "latency":  {
-					socketListener.computeTimeDiff(bundle.values[0]);
-					break;
-				}
-				case "slow time": {
-					for (i = 0; i < bundle.values.length; i++ ) {
-						if(players[bundle.values[i]]!=null) players[bundle.values[i]].setSpeed(.01);
-					}					
-					break;
-				}
-				case "return time": {
-					for (i = 0; i < bundle.values.length; i++ ) {
-						if(players[bundle.values[i]]!=null) players[bundle.values[i]].setSpeed(.1);
-					}					
-					break;
-				}
-				case "rocket launch": {
-					sb.deploySkill(bundle);
-					break;
-				}
-				case "health": {
-					players[bundle.values[0]].health = bundle.values[1];
-					break;
-				}
-				case "dead": {
-					players[bundle.values[0]].health = 100;
-					players[bundle.values[0]].stopMoving();
-					players[bundle.values[0]].iniY = 50;
-					players[bundle.values[0]].iniX = 50;
+				case "basic":  {
+					switch (bundle.header) {
+						case "latency":  {
+							socketListener.computeTimeDiff(bundle.values[0]);
+							break;
+						}
+						case "info":  {
+							i = bundle.values[0];
+							gamer = new Player(map, i, this);
+							gamer.setName(nickname);
+							pushPlayer(i, gamer);
+							b = new Bundle("name", "basic");
+							b.pushValue(nickname);
+							socketListener.sendBundle(b);
+							var b:Bundle = new Bundle("request gamers", "basic");
+							socketListener.sendBundle(b);
+							break;
+						}
+						case "connected":  {
+							i = bundle.values[0];
+							var p:Player = new Player(map, i, this);
+							p.setName(bundle.values[1]);
+							pushPlayer(i, p);
+							break;
+						}
+						case "deleted":  {
+							deletePlayer(bundle.values[0]);
+							break;
+						}
+					}
 					break;
 				}
 			}
@@ -163,48 +137,17 @@ package game {
 			players[index] = null;
 		}
 		
-		public function movePlayer(start:Number, direction:String, playerId:int = -1):void {
-			if (playerId == -1) {
-				gamer.moveTo(direction);
-				var b:Bundle = new Bundle("moving1");
-				b.pushValue(gamer.index);
-				b.pushValue(direction);
-				socketListener.sendBundle(b);
-			} else {
-				if (players[playerId] != null)
-					players[playerId].moveTo(direction, start);
-			}
-		}
+		
 		
 		public function getTimeDifference():int {
 			return socketListener.getTimeDifference();
 		}
 		
-		public function getPlayer(ind:int=-1):Player {
+		public function getPlayer(ind:int = -1):Player {
 			if (ind == -1) {
 				return gamer;
 			} else {
 				return players[ind];
-			}
-		}
-		
-		public function stopMovePlayer(_x:int = -1, _y:int = -1, playerId:int = -1):void {
-			if (playerId == -1) {
-				gamer.stopMoving();
-				var b:Bundle = new Bundle("moving0");
-				b.pushValue(gamer.index);
-				b.pushValue(gamer.x);
-				b.pushValue(gamer.y);
-				socketListener.sendBundle(b);
-			} else {
-				if (players[playerId] != null) {
-					players[playerId].stopMoving();
-					if (_x != -1 && _y != -1) {
-						players[playerId].iniX = _x;
-						players[playerId].iniY = _y;
-					}
-					
-				}
 			}
 		}
 		
@@ -217,7 +160,7 @@ package game {
 				_target.hideHealth();
 			}
 			_target = value;
-			var b:Bundle = new Bundle("target");
+			var b:Bundle = new Bundle("target", "player");
 			b.pushValue(value.index);
 			_target.showHealth();
 			sendBundle(b);

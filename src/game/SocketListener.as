@@ -25,7 +25,7 @@ package game {
 		}
 		
 		private function latencyChecker():void {
-			var b:Bundle = new Bundle("latency");
+			var b:Bundle = new Bundle("latency", "basic");
 			templat = new Date().getTime();
 			sendBundle(b);
 		}
@@ -36,7 +36,7 @@ package game {
 			if (_latency < latency) {
 				latency = _latency;
 				timeDifference = new Date().getTime() - servTime - latency;			
-				var b:Bundle = new Bundle("timDiff");
+				var b:Bundle = new Bundle("timDiff", "basic");
 				b.pushValue(timeDifference);
 				sendBundle(b);
 				trace("Latency: " + latency + "  diff: " + timeDifference);

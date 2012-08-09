@@ -22,32 +22,51 @@ package game {
 		
 		}
 		
+		private function movePlayer(s:Number, direction:String):void {
+			var gamer:Player = manager.getPlayer();
+			var b:Bundle = new Bundle("moving1", "player");
+			b.pushValue(gamer.index);
+			b.pushValue(direction);
+			manager.sendBundle(b);
+			gamer.moveTo(direction, s);
+		}
+		
+		private function stopPlayer():void {
+			var gamer:Player = manager.getPlayer();
+			var b:Bundle = new Bundle("moving0", "player");
+			gamer.stopMoving();
+			b.pushValue(gamer.index);
+			b.pushValue(gamer.x);
+			b.pushValue(gamer.y);
+			manager.sendBundle(b);
+		}
+		
 		private function upEvent(e:KeyboardEvent):void {
 			switch (e.keyCode) {
 				case 87:  {
 					if (up) {
-						manager.stopMovePlayer();
+						stopPlayer();
 						up = false;
 					}
 					break;
 				}
 				case 83:  {
 					if (down) {
-						manager.stopMovePlayer();
+						stopPlayer();
 						down = false;
 					}
 					break;
 				}
 				case 65:  {
 					if (left) {
-						manager.stopMovePlayer();
+						stopPlayer();
 						left = false;
 					}
 					break;
 				}
 				case 68:  {
 					if (right) {
-						manager.stopMovePlayer();
+						stopPlayer();
 						right = false;
 					}
 					break;
@@ -60,28 +79,28 @@ package game {
 			switch (e.keyCode) {
 				case 87:  {
 					if (!up) {
-						manager.movePlayer(s, Player.UP);
+						movePlayer(s, Player.UP);
 						up = true;
 					}
 					break;
 				}
 				case 83:  {
 					if (!down) {
-						manager.movePlayer(s, Player.DOWN);
+						movePlayer(s, Player.DOWN);
 						down = true;
 					}
 					break;
 				}
 				case 65:  {
 					if (!left) {
-						manager.movePlayer(s, Player.LEFT);
+						movePlayer(s, Player.LEFT);
 						left = true;
 					}
 					break;
 				}
 				case 68:  {
 					if (!right) {
-						manager.movePlayer(s, Player.RIGHT);
+						movePlayer(s, Player.RIGHT);
 						right = true;
 					}
 					break;

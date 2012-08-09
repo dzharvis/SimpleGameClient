@@ -63,6 +63,7 @@ package game.player {
 			t.autoSize = TextFieldAutoSize.LEFT;
 			t.background = true;
 			t.backgroundColor = 0xcccccc;
+			t.selectable = false;
 			t.alpha = .8;
 			addChild(t);
 			t.x = -t.width / 2;
@@ -91,12 +92,13 @@ package game.player {
 			healthBar.graphics.beginFill(0x000000);
 			healthBar.graphics.drawRect(health, 0, 100 - health, 2);
 			addChild(healthBar);
-			healthBar.x = - healthBar.width / 2;
-			healthBar.y = tank.y + tank.height+2;
+			healthBar.x = -healthBar.width / 2;
+			healthBar.y = tank.y + tank.height + 2;
 		}
 		
 		public function hideHealth():void {
-			if(healthBar.parent!=null) removeChild(healthBar);
+			if (healthBar.parent != null)
+				removeChild(healthBar);
 		}
 		
 		private function mOutListener(e:MouseEvent):void {
@@ -145,11 +147,11 @@ package game.player {
 			addEventListener(Event.ENTER_FRAME, moveAnim);
 		}
 		
-		public function stopMoving():void {			
+		public function stopMoving():void {
 			up = left = right = down = false;
 			iniX = x;
 			iniY = y;
-			removeEventListener(Event.ENTER_FRAME, moveAnim);		
+			removeEventListener(Event.ENTER_FRAME, moveAnim);
 		}
 		
 		public function updateCoords():void {
@@ -202,6 +204,36 @@ package game.player {
 			return new Point(blockIndexX, blockIndexY);
 		}
 		
+		public function handleBundle(b:Object):void {
+			switch (b.header) {
+				case "moving1":  {
+					var direction:String = b.values[1];
+					var start:Number = b.values[2];
+					moveTo(direction, start);
+					break;
+				}
+				case "moving0":  {
+					var _x:int = b.values[1];
+					var _y:int = b.values[2];
+					stopMoving();
+					iniX = _x;
+					iniY = _y;
+					break;
+				}
+				case "health":  {
+					health = b.values[1];
+					break;
+				}
+				case "dead":  {
+					health = 100;
+					stopMoving();
+					iniY = 50;
+					iniX = 50;
+					break;
+				}
+			}
+		}
+		
 		private function moveAnim(e:Event):void {
 			var indexes:Point = getNearestBlockIndexes();
 			var shift:Number = (new Date().getTime() - movingStart) * speed;
@@ -214,7 +246,6 @@ package game.player {
 						y = iniY - shift;
 					} else {
 						stopMoving();
-						manager.stopMovePlayer(x, y, index);
 					}
 					
 				}
@@ -228,7 +259,6 @@ package game.player {
 						x = iniX + shift;
 					} else {
 						stopMoving();
-						manager.stopMovePlayer(x, y, index);
 					}
 				}
 				return;
@@ -242,7 +272,6 @@ package game.player {
 						y = iniY + shift;
 					} else {
 						stopMoving();
-						manager.stopMovePlayer(x, y, index);
 					}
 				}
 				return;
@@ -255,7 +284,6 @@ package game.player {
 						x = iniX - shift;
 					} else {
 						stopMoving();
-						manager.stopMovePlayer(x, y, index);
 					}
 				}
 				return;

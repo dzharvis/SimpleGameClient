@@ -58,6 +58,15 @@ package game.ui {
 			messageInput.y = messagesOutput.height+5;
 		}
 		
+		public function handleBundle(bundle:Object):void {
+			switch(bundle.header) {
+				case "message":  {
+					putMessage(bundle.values[0]);
+					break;
+				}
+			}
+		}
+		
 		private function sendMessage(e:KeyboardEvent):void {
 			if (e.keyCode == 13) {
 				if (stage.focus == messageInput) {
@@ -67,7 +76,7 @@ package game.ui {
 				}
 			}
 			if (e.keyCode == 13 && messageInput.text.length > 0) {
-				var b:Bundle = new Bundle("message");
+				var b:Bundle = new Bundle("message", "chat");
 				b.pushValue(messageInput.getRawText());
 				
 				messageInput.text = "";

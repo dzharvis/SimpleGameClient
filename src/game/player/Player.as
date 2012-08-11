@@ -74,12 +74,12 @@ package game.player {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(MouseEvent.MOUSE_OVER, mOverListener);
 			addEventListener(MouseEvent.MOUSE_OUT, mOutListener);
-			addEventListener(MouseEvent.CLICK, mClickListener);
+			addEventListener(MouseEvent.CLICK, mDownListener);
 			addChild(tank);
 			iniX = iniY = 50;
 		}
 		
-		private function mClickListener(e:MouseEvent):void {
+		private function mDownListener(e:MouseEvent):void {
 			manager.target = this;
 			showHealth();
 		}
@@ -218,6 +218,10 @@ package game.player {
 					stopMoving();
 					iniX = _x;
 					iniY = _y;
+					break;
+				}
+				case "speed": {
+					setSpeed(b.values[1]);
 					break;
 				}
 				case "health":  {

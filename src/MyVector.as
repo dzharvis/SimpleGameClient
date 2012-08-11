@@ -40,12 +40,30 @@ package  {
 			return _length;
 		}
 		
-		public function getRotation():int {
+		public function addVector(vec:MyVector):MyVector {
+			return new MyVector(x + vec.x, y + vec.y);
+		}	
+		
+		public function getVecFromAngle(phi:Number):MyVector {
+			var _x:Number = Math.cos(phi * Math.PI / 180);
+			var _y:Number = Math.sin(phi * Math.PI / 180);
+			return new MyVector(_x, _y).unitVector;
+		}
+		
+		public function getRotation(raw:Boolean = false):int {
 			var sin:Number = Math.asin(y) * 180 / Math.PI;
-			if (x > 0) {
-				return sin+90;
+			if(!raw){				
+				if (x > 0) {
+					return sin+90;
+				} else {
+					return -sin-90;
+				}
 			} else {
-				return -sin-90;
+				if (x >= 0) {
+					return sin;
+				} else {
+					return 180-sin;
+				}
 			}
 		}
 		

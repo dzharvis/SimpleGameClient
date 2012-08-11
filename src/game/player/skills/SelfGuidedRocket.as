@@ -3,39 +3,38 @@ package game.player.skills {
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import game.player.Player;
-	import game.player.skillObjects.RocketObject;
+	import game.player.skillObjects.RangeHeavyObject;
+	import game.player.skillObjects.RangeObject;
+	import game.player.skillObjects.RangeObjectBundle;
+	import game.player.skills.basic.RangeSkill;
 	import game.WorldManager;
 	
 	/**
 	 * ...
 	 * @author Dzharvis
 	 */
-	public class SelfGuidedRocket extends Skill {
+	public class SelfGuidedRocket extends RangeSkill {
 		[Embed(source="pics/RocketJeep.jpg")]
 		private var Rocket:Class;
-		private var rocketBitmap:Bitmap = new  Rocket();		
-		private var rocketIcon:Sprite = new Sprite();
+		private var rocketBitmap:Bitmap = new  Rocket();
 		
-		private var _cooldownTime:int = 2000;
-		private var mStage:Stage;
-		private var manager:WorldManager;
-		private var target:Player;
-		private var event:Boolean;
+		[Embed(source = "pics/rkaaxelgear.png")]
+		private var RocketGraphics:Class;
+		private var rocketGr:Bitmap = new  RocketGraphics();
 		
-		public function SelfGuidedRocket(manager:WorldManager) {
-			this.manager = manager;
-			addChild(rocketIcon);			
-			rocketBitmap.smoothing = true;
-			rocketIcon.addChild(rocketBitmap);
-			rocketIcon.scaleX = rocketIcon.scaleY = 100/rocketIcon.width;
-			super(manager);
-			setDistance(500);
+		public function SelfGuidedRocket(manager:WorldManager) {		
+			super(manager, 250, 500, .3, "rocket", rocketBitmap);
 		}
 		
-		public function deploy(who:Player, target:Player, event:Boolean, skillIndex:int):void {
-			var r:RocketObject = new RocketObject(who, target, event, manager, skillIndex);
+		override public function deploy(b:Object):void {
+			
+			var rangeObjBundle:RangeObjectBundle = constructSkillBundle(b, rocketGr);
+			if (rangeObjBundle.skillDeployer == manager.getPlayer()) {
+				beginCooldown();
+			}			
+			var r:RangeObject = new RangeObject(rangeObjBundle);
 			manager.addChild(r);
-			r.deploy();			
+			r.deploy();
 		}
 		
 	}

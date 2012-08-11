@@ -49,6 +49,9 @@ package game.world {
 		public function testHit(tank:Tank, blockIndexX:int, blockIndexY:int):Boolean {
 			if (blockIndexX < 0 || blockIndexY < 0)
 				return false;
+			if (blockIndexX >= tileMatrix.length) return false;
+			if (blockIndexY >= tileMatrix[blockIndexX].length) return false;
+			
 			if (tileMatrix[blockIndexY][blockIndexX] is Earth)
 				return false;
 			return tank.hitTestObject(tileMatrix[blockIndexY][blockIndexX]);

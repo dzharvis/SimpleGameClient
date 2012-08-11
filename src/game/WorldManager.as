@@ -68,7 +68,7 @@ package game {
 					break;
 				}
 				case "player":  {
-					players[bundle.values[0]].handleBundle(bundle);					
+					if(players[bundle.values[0]]!=null) players[bundle.values[0]].handleBundle(bundle);					
 					break;
 				}
 				case "map":  {
@@ -134,7 +134,9 @@ package game {
 			} else {
 				trace("Error, while deleting a player, appears!");
 			}
+			if (target == players[index]) target = null;
 			players[index] = null;
+			
 		}
 		
 		
@@ -156,6 +158,7 @@ package game {
 		}
 		
 		public function set target(value:Player):void {
+			if (value == null) return;
 			if (_target != null) {
 				_target.hideHealth();
 			}

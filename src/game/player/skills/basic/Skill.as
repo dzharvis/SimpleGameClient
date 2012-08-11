@@ -1,4 +1,5 @@
-package game.player.skills {
+package game.player.skills.basic {
+	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -6,6 +7,7 @@ package game.player.skills {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Timer;
+	import game.Bundle;
 	import game.player.Player;
 	import game.WorldManager;
 	
@@ -15,21 +17,32 @@ package game.player.skills {
 	 */
 	public class Skill extends Sprite {
 		
-		protected var _cooldown:int;
-		protected var _distance:int;
+		private var cooldown:int;
+		private var distance:int;
 		private var lastTimeUsed:Number;
 		private var timer:Timer;
 		private var shadow:Sprite = new Sprite();
 		private var timeLeft:TextField = new TextField();
-		private var manager:WorldManager;
+		protected var manager:WorldManager;
 		private var circle:Shape = new Shape;
+		private var icon:Bitmap;
+		protected var speed:Number;
+		protected var skillName:String;
 		
-		public function Skill(manager:WorldManager) {
+		public function Skill(manager:WorldManager, distance:Number, cooldown:int, speed:Number, skillName:String, icon:Bitmap) {
 			super();
+			this.speed = speed;
+			this.icon = icon;
+			this.skillName = skillName;
 			this.manager = manager;
-			_cooldown = 5000;
-			_distance = 200;
-			lastTimeUsed = new Date().getTime()-3600000;
+			this.cooldown = cooldown;
+			this.distance = distance;
+			lastTimeUsed = new Date().getTime() - cooldown;
+			
+			addChild(icon);
+			icon.smoothing = true;
+			icon.scaleX = icon.scaleY = 100 / icon.width;
+			
 			shadow.graphics.beginFill(0x000000, .5);
 			shadow.graphics.drawRect(0, 0, width, height);
 			timeLeft.autoSize = TextFieldAutoSize.LEFT;
@@ -37,33 +50,40 @@ package game.player.skills {
 			timeLeft.selectable = false;
 			shadow.addChild(timeLeft);
 			circle.graphics.lineStyle(5, 0x00ff00);
-			circle.graphics.drawCircle(0, 0, _distance);
+			circle.graphics.drawCircle(0, 0, distance*2);
 			addEventListener(MouseEvent.MOUSE_OVER, overListener);
 			addEventListener(MouseEvent.MOUSE_OUT, outListener);
+			addEventListener(MouseEvent.CLICK, clickListener);
+		}
+		
+		private function clickListener(e:MouseEvent):void {
+			if(skillAvailable()){
+				var b:Bundle = new Bundle(skillName, "skill");
+				b.pushValue("permission");
+				manager.sendBundle(b);
+			}
 		}
 		
 		private function outListener(e:MouseEvent):void {
 			manager.getPlayer().removeChild(circle);
 		}
 		
+		public function deploy(b:Object):void {
+			
+		}
+		
+		
 		
 		private function overListener(e:MouseEvent):void {
 			manager.getPlayer().addChild(circle);
 		}
 		
-		public function get cooldown():int {
-			return _cooldown;
+		public function getCooldown():int {
+			return cooldown;
 		}
 		
-		public function get distance():int {
-			return _distance;
-		}
-		
-		protected function setDistance(value:int):void {
-			_distance = value;
-			circle.graphics.clear();
-			circle.graphics.lineStyle(5, 0x00ff00);
-			circle.graphics.drawCircle(0, 0, _distance);
+		public function getDistance():int {
+			return distance;
 		}
 		
 		public function beginCooldown():void {
@@ -88,7 +108,7 @@ package game.player.skills {
 			timeLeft.y = height / 2 - timeLeft.height / 2;
 			if (skillAvailable()) {
 				timer.stop();
-				removeChild(shadow);
+				if(shadow.parent!=null) removeChild(shadow);
 				timeLeft.text = "";
 			}
 		}

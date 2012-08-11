@@ -1,7 +1,5 @@
 package game.player.skills {
 	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import game.player.Player;
 	import game.player.skills.basic.Skill;
 	import game.WorldManager;
 	
@@ -9,20 +7,22 @@ package game.player.skills {
 	 * ...
 	 * @author Dzharvis
 	 */
-	public class TimeStop extends Skill {
-		[Embed(source = "pics/Time.jpg")]
-		private var Time:Class;
-		private var timeBitmap:Bitmap = new  Time();
+	public class HeavyArmor extends Skill {
 		
-		public function TimeStop(manager:WorldManager) {
-
-			super(manager, 300, 60000, 0, "time stop", timeBitmap);
+		[Embed(source = "pics/HeavyArmor.png")]
+		private var HeavyArmorC:Class;
+		private var heavyIcon:Bitmap = new HeavyArmorC();
+		
+		public function HeavyArmor(manager:WorldManager) {
+			super(manager, 10, 8000, 0, "heavy armor", heavyIcon);			
 		}
+		
 		override public function deploy(b:Object):void {
 			if (manager.getPlayer(b.values[0]) == manager.getPlayer()) {
 				beginCooldown();
 			}
 		}
+		
 	}
 
 }

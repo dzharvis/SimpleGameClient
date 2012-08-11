@@ -28,7 +28,7 @@ package game {
 			b.pushValue(gamer.index);
 			b.pushValue(direction);
 			manager.sendBundle(b);
-			gamer.moveTo(direction, s);
+			gamer.moveTo(direction, -1);
 		}
 		
 		private function stopPlayer():void {

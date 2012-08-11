@@ -46,7 +46,6 @@ package {
 			
 			nickNameTextField = new TextField();
 			addChild(nickNameTextField);
-			//nickNameTextField.autoSize = TextFieldAutoSize.LEFT;
 			nickNameTextField.text = "Nickname here";
 			nickNameTextField.type = "input";
 			nickNameTextField.background = true;
@@ -60,6 +59,10 @@ package {
 		private function connectListener(e:MouseEvent):void {
 			if (nickNameTextField.text == "Nickname here" || nickNameTextField.text == "" || nickNameTextField.text == "Please select nickname") {
 				nickNameTextField.text = "Please select nickname";
+				return;
+			}
+			if (nickNameTextField.text.length > 15) {
+				nickNameTextField.text = "Nickname is to long";
 				return;
 			}
 			main.connect(nickNameTextField.text);

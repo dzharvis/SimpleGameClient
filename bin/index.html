@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+	<head>
+		<title>TopMMORPG</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript" src="js/swfobject.js"></script>
+		<script type="text/javascript">
+			<!-- Компания Adobe рекомендует разработчиками использовать для определения версии проигрывателя Flash Player объект SWFObject2. -->
+			<!-- Дополнительные сведения см. на странице SWFObject по адресу http://code.google.com/p/swfobject. -->
+			<!-- Информацию также можно получить в центре разработчиков Adobe Developer Connection в разделе "Определение версии Flash Player и внедрение файлов SWF с SWFObject 2" -->
+			<!-- Чтобы отключить проверку версии Flash Player, установите минимальное значение версии (ноль) -->
+			var swfVersionStr = "10.1.52";
+			<!-- xiSwfUrlStr может использоваться для определения экспресс-установщика SWF. -->
+			var xiSwfUrlStr = "";
+			var flashvars = {};
+			var params = {};
+			params.quality = "high";
+			params.bgcolor = "#333333";
+			params.play = "true";
+			params.loop = "true";
+			params.wmode = "window";
+			params.scale = "showall";
+			params.menu = "true";
+			params.devicefont = "false";
+			params.salign = "lt";
+			params.allowscriptaccess = "sameDomain";
+			var attributes = {};
+			attributes.id = "bla";
+			attributes.name = "bla";
+			attributes.align = "middle";
+			swfobject.createCSS("html", "height:100%; background-color: #333333;");
+			swfobject.createCSS("body", "margin:0; padding:0; overflow:hidden; height:100%;");
+			swfobject.embedSWF(
+				"SGame.swf", "flashContent",
+				"100%", "100%",
+				swfVersionStr, xiSwfUrlStr,
+				flashvars, params, attributes);
+		</script>
+	</head>
+	<body>
+		<!-- При наличии полной поддержки  JavaScript и Flash используется метод динамического внедрения SWFObject. -->
+		<div id="flashContent">
+			<a href="http://www.adobe.com/go/getflash">
+				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Загрузить Adobe Flash Player" />
+			</a>
+			<p>Для корректного отображения данной страницы требуется проигрыватель Flash Player версии 10.1.52 или новее.</p>
+		</div>
+	</body>
+</html>

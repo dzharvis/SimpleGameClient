@@ -1,4 +1,7 @@
 #Simple Online Game Client
+
+<a href="https://github.com/dzharvis/SimpleGameServer">Server side here</a>
+
 This is very simple game using AS3 (Client) + Java (Server). 
 Game was designed in such a way, that almost everything is checked on the server.
 SKills cooldowns, possibility of rocket hits, speed etc.

@@ -1,4 +1,4 @@
-#Simple Game Client
+#Simple Online Game Client
 This is very simple game using AS3 (Client) + Java (Server). 
 Game was designed in such a way, that almost everything is checked on the server.
 SKills cooldowns, possibility of rocket hits, speed etc.

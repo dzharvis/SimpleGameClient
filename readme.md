@@ -7,8 +7,8 @@ Game was designed in such a way, that almost everything is checked on the server
 SKills cooldowns, possibility of rocket hits, speed etc.
 I tried to write it in such a way, that it will be possible to increase its complexity and functionality in the future.
 
-<img src="https://dl.dropbox.com/u/37043382/TOPMMORPG/screenshots/1.jpg" width="75%">
-<img src="https://dl.dropbox.com/u/37043382/TOPMMORPG/screenshots/2.jpg" width="75%">
+<img src="https://github.com/dzharvis/game-client-simple/blob/master/screenshots/1.jpg" width="75%">
+<img src="https://github.com/dzharvis/game-client-simple/blob/master/screenshots/2.jpg" width="75%">
 
 The game is very simple now. You just select your nickname and connect to the server. If someone is playing right now, you will see him.
 Than you select some player as target and can use some skills to kill him. 
